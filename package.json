@@ -1,0 +1,8 @@
+{   "name": "express-configure"
+  , "description": "Express async configuration support"
+  , "version": "0.0.1"
+  , "author": "TJ Holowaychuk <tj@vision-media.ca>"
+  , "keywords": ["express"]
+  , "main": "index"
+  , "engines": { "node": ">= 0.2.0" }
+}
