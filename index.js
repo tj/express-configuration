@@ -10,13 +10,12 @@
  */
 
 var express = require('express')
-  , Server = express.HTTPServer
-    ? express.HTTPServer
-    : express.Server;
+  , HTTPServer = express.HTTPServer
+  , HTTPSServer = express.HTTPSServer;
 
 // Proxy listen
 
-var listen = Server.prototype.listen;
+var listen = HTTPServer.prototype.listen;
 
 /**
  * Proxy listen() to provide async support.
@@ -24,7 +23,7 @@ var listen = Server.prototype.listen;
  * @api public
  */
 
-Server.prototype.listen = function(){
+exports.listen = function(){
   if (this.__config) {
     this.__listen = arguments;
   } else {
@@ -34,7 +33,7 @@ Server.prototype.listen = function(){
 
 // Proxy listenFD
 
-var listenFD = Server.prototype.listenFD;
+var listenFD = HTTPServer.prototype.listenFD;
 
 /**
  * Proxy listen() to provide async support.
@@ -42,7 +41,7 @@ var listenFD = Server.prototype.listenFD;
  * @api public
  */
 
-Server.prototype.listenFD = function(){
+exports.listenFD = function(){
   if (this.__config) {
     this.__listenFD = arguments;
   } else {
@@ -52,7 +51,7 @@ Server.prototype.listenFD = function(){
 
 // Proxy configure
 
-var configure = Server.prototype.configure;
+var configure = HTTPServer.prototype.configure;
 
 /**
  * Proxy configure() to provide async support.
@@ -60,7 +59,7 @@ var configure = Server.prototype.configure;
  * @api public
  */
 
-Server.prototype.configure = function(env, fn){
+exports.configure = function(env, fn){
   var self = this;
   this.__config = this.__config || 0
 
@@ -87,3 +86,10 @@ Server.prototype.configure = function(env, fn){
   }
   return this;
 };
+
+// merge
+
+for (var key in exports) {
+  HTTPServer.prototype[key] =
+  HTTPSServer.prototype[key] = exports[key];
+}
