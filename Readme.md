@@ -11,7 +11,7 @@ npm:
 
 ## Usage
 
-Ever wanted to boot your Express app settings using Redis or a similar key/value store? well now it is easy, all we need to do is require('express-configure')` which monkey-patches express, and then invoke the optional callback `configure()`:
+Ever wanted to boot your Express app settings using Redis or a similar key/value store before accepting connections? well now it is easy, all we need to do is `require('express-configure')` which monkey-patches express, and then invoke the optional callback `configure()`.
 
       app.configure(function(done){
         redis.hmget('settings', function(err, obj){
