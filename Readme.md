@@ -1,4 +1,3 @@
-
 # Express Contrib
       
   Adds async configuration support to Express.
@@ -7,30 +6,38 @@
 
 npm:
 
-    $ npm install express-configure
+```bash
+$ npm install express-configure
+```
 
 ## Usage
 
 Ever wanted to boot your Express app settings using Redis or a similar key/value store before accepting connections? well now it is easy, all we need to do is `require('express-configure')` which monkey-patches express, and then invoke the optional callback `configure()`.
 
-      app.configure(function(done){
-        redis.hgetall('settings', function(err, obj){
-          for (var key in obj) app.set(key, obj[key]);
-          done();
-        });
-      });
+```javascript
+app.configure(function(done){
+  redis.hgetall('settings', function(err, obj){
+	for (var key in obj) app.set(key, obj[key]);
+	done();
+  });
+});
 
-      app.listen(3000);
+app.listen(3000);
+```
 
 ## Running Tests
 
 First make sure you have the submodules:
 
-    $ git submodule update --init
+```bash
+$ git submodule update --init
+```
 
 Then run the tests:
 
-    $ make test
+```bash
+$ make test
+```
 
 ## License 
 
