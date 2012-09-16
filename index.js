@@ -9,13 +9,10 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , HTTPServer = express.HTTPServer
-  , HTTPSServer = express.HTTPSServer;
+var application = require('express').application;
 
 // Proxy listen
-
-var listen = HTTPServer.prototype.listen;
+var listen = application.listen;
 
 /**
  * Proxy listen() to provide async support.
@@ -31,28 +28,6 @@ exports.listen = function(){
   }
 };
 
-// Proxy listenFD
-
-var listenFD = HTTPServer.prototype.listenFD;
-
-/**
- * Proxy listen() to provide async support.
- *
- * @api public
- */
-
-exports.listenFD = function(){
-  if (this.__config) {
-    this.__listenFD = arguments;
-  } else {
-    listenFD.apply(this, arguments);
-  }
-};
-
-// Proxy configure
-
-var configure = HTTPServer.prototype.configure;
-
 /**
  * Proxy configure() to provide async support.
  *
@@ -61,23 +36,20 @@ var configure = HTTPServer.prototype.configure;
 
 exports.configure = function(env, fn){
   var self = this;
-  this.__config = this.__config || 0
+  this.__config = this.__config || 0,
+  envs = 'all',
+  args = [].slice.call(arguments);
 
-  if (typeof env === 'function') {
-    fn = env, env = 'all';
-  }
+  fn = args.pop();
+  if (args.length) envs = args;
 
-  if ('all' == env || env == this.settings.env) {
+  if ('all' == envs || ~envs.indexOf(this.settings.env)) {
     if (fn.length) {
       ++this.__config;
       fn.call(this, function(err){
         if (err) throw err;
         if (!--self.__config) {
-          if (self.__listen) {
-            listen.apply(self, self.__listen);
-          } else if (self.__listenFD) {
-            listenFD.apply(self, self.__listenFD);
-          }
+          listen.apply(self, self.__listen);
         }
       });
     } else {
@@ -88,8 +60,7 @@ exports.configure = function(env, fn){
 };
 
 // merge
-
 for (var key in exports) {
-  HTTPServer.prototype[key] =
-  HTTPSServer.prototype[key] = exports[key];
+  console.log(key)
+  application[key] = exports[key];
 }
