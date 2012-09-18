@@ -35,19 +35,23 @@ exports.listen = function(){
  */
 
 exports.configure = function(env, fn){
-  var self = this;
-  this.__config = this.__config || 0,
+  var self = this,
   envs = 'all',
   args = [].slice.call(arguments);
+  this.__config = this.__config || 0,
+
 
   fn = args.pop();
-  if (args.length) envs = args;
-
-  if ('all' == envs || ~envs.indexOf(this.settings.env)) {
+  if (args.length) {
+      envs = args;
+  }
+  if ('all' === envs || ~envs.indexOf(this.settings.env)) {
     if (fn.length) {
       ++this.__config;
       fn.call(this, function(err){
-        if (err) throw err;
+        if (err) {
+          throw err;
+        }
         if (!--self.__config) {
           listen.apply(self, self.__listen);
         }
@@ -61,6 +65,5 @@ exports.configure = function(env, fn){
 
 // merge
 for (var key in exports) {
-  console.log(key)
   application[key] = exports[key];
 }
