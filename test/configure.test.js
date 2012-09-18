@@ -5,8 +5,7 @@
 
 var express = require('express'),
     config = require('../'),
-    assert = require('assert'),
-    http = require('http');
+    assert = require('assert');
 
 // Faux redis
 
